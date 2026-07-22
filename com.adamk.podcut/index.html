@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>PodCut</title>
+<style>
+  :root {
+    --bg: #232323; --panel: #2d2d2d; --border: #3a3a3a;
+    --text: #d6d6d6; --dim: #8f8f8f; --accent: #4a90d9; --accent2: #6ab04c;
+    --danger: #c0564f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 10px; background: var(--bg); color: var(--text);
+    font: 12px/1.45 -apple-system, "Segoe UI", sans-serif;
+    user-select: none;
+  }
+  h1 { font-size: 14px; margin: 0 0 2px; color: #fff; }
+  .sub { color: var(--dim); margin-bottom: 10px; font-size: 11px; }
+  fieldset {
+    border: 1px solid var(--border); border-radius: 4px;
+    margin: 0 0 10px; padding: 8px 10px 10px; background: var(--panel);
+  }
+  legend { color: var(--accent); font-weight: 600; padding: 0 4px; font-size: 11px; }
+  button {
+    background: #3f3f3f; color: var(--text); border: 1px solid #555;
+    border-radius: 3px; padding: 6px 12px; cursor: pointer; font-size: 12px;
+  }
+  button:hover { background: #4a4a4a; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { filter: brightness(1.1); }
+  button.go { background: var(--accent2); border-color: var(--accent2); color: #fff; }
+  button.danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+  button:disabled { opacity: 0.4; cursor: default; }
+  select, input[type=number], input[type=text] {
+    background: #1e1e1e; color: var(--text); border: 1px solid var(--border);
+    border-radius: 3px; padding: 3px 5px; font-size: 12px; width: 100%;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; color: var(--dim); font-weight: 400; font-size: 11px; padding: 2px 4px; }
+  td { padding: 2px 4px; }
+  .settings-grid {
+    display: grid; grid-template-columns: 1fr 70px; gap: 5px 8px; align-items: center;
+  }
+  .settings-grid label { color: var(--text); }
+  .hint { color: var(--dim); font-size: 10px; grid-column: 1 / -1; margin: -3px 0 3px; }
+  .btnrow { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+  #log {
+    background: #1a1a1a; border: 1px solid var(--border); border-radius: 3px;
+    padding: 6px 8px; height: 110px; overflow-y: auto; font-family: Menlo, monospace;
+    font-size: 10.5px; white-space: pre-wrap; color: #a8c8a8; user-select: text;
+  }
+  #preview { color: var(--dim); font-size: 11px; margin-top: 6px; }
+  #preview b { color: #fff; }
+  .rowdel { color: var(--danger); cursor: pointer; padding: 0 4px; font-weight: bold; }
+</style>
+</head>
+<body>
+  <h1>PodCut</h1>
+  <div class="sub">Auto multicam podcast editing — one mic per speaker, one camera per speaker.</div>
+
+  <fieldset>
+    <legend>1 · Sequence &amp; speaker mapping</legend>
+    <div class="btnrow" style="margin-bottom:8px">
+      <button id="btnScan" class="primary">Scan Active Sequence</button>
+      <span id="seqInfo" style="color:var(--dim); align-self:center"></span>
+    </div>
+    <table id="mapTable" style="display:none">
+      <thead><tr><th>#</th><th>Speaker mic (audio)</th><th>Camera (video)</th><th></th></tr></thead>
+      <tbody id="mapBody"></tbody>
+    </table>
+    <div class="btnrow">
+      <button id="btnAddSpeaker" style="display:none">+ Add speaker</button>
+    </div>
+    <div class="settings-grid" id="wideRow" style="display:none; margin-top:8px">
+      <label>Wide / group shot camera</label>
+      <select id="wideCam" style="width:70px"></select>
+      <div class="hint">Used when several people talk at once, and for pacing cutaways. Set to “none” to disable.</div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>2 · Edit settings</legend>
+    <div class="settings-grid">
+      <label>Voice sensitivity (dB above noise floor)</label>
+      <input type="number" id="sensitivity" value="12" min="3" max="30" step="1">
+      <div class="hint">Lower = picks up quieter speech (and more background noise).</div>
+
+      <label>Minimum shot length (s)</label>
+      <input type="number" id="minShot" value="1.5" min="0.5" max="10" step="0.1">
+
+      <label>Maximum shot length (s)</label>
+      <input type="number" id="maxShot" value="14" min="3" max="60" step="1">
+      <div class="hint">Long monologues get a cutaway so the edit stays dynamic.</div>
+
+      <label>Variation (%)</label>
+      <input type="number" id="variation" value="20" min="0" max="50" step="5">
+      <div class="hint">Randomises pacing cut timing so the edit doesn't feel robotic.</div>
+
+      <label>Group shot trigger (s of crosstalk)</label>
+      <input type="number" id="groupTrigger" value="1.2" min="0.3" max="5" step="0.1">
+
+      <label>Group shot duration (s)</label>
+      <input type="number" id="groupDur" value="4" min="1" max="20" step="0.5">
+
+      <label>Frame offset (frames, − cuts earlier)</label>
+      <input type="number" id="frameOffset" value="0" min="-30" max="30" step="1">
+
+      <label>ffmpeg path (auto-detected)</label>
+      <input type="text" id="ffmpegPath" placeholder="auto" style="width:70px">
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>3 · Run</legend>
+    <div class="btnrow">
+      <button id="btnGenerate" class="primary" disabled>Analyze &amp; Preview</button>
+      <button id="btnApply" class="go" disabled>Apply Edit</button>
+      <button id="btnReset" class="danger" disabled>Reset Edit</button>
+    </div>
+    <div id="preview"></div>
+  </fieldset>
+
+  <div id="log">PodCut ready. Open your podcast sequence in Premiere, then hit “Scan Active Sequence”.</div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
