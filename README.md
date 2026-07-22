@@ -1,11 +1,12 @@
-# PodCut — automatic multicam podcast editing for Premiere Pro
+# PodAuto — automatic multicam podcast editing for Premiere Pro
 
-A personal Premiere Pro panel that does what tools like Wraith/Autopod do: it listens to
-each speaker's mic, figures out who is talking, and automatically cuts between
-camera angles — giving you a close-to-final edit in minutes instead of hours of
-multicam work. Supports up to 8 speakers/cameras.
+A Premiere Pro panel that listens to each speaker's mic, figures out who is
+talking, and automatically cuts between camera angles — giving you a
+close-to-final edit in minutes instead of hours of multicam work. Supports up
+to 8 speakers/cameras. Everything runs locally on your machine: no network
+calls, no accounts, your audio never leaves your computer.
 
-**No multicam clips needed.** PodCut works on plain stacked tracks, and the edit
+**No multicam clips needed.** PodAuto works on plain stacked tracks, and the edit
 is non-destructive: it only razors and *disables* the non-active camera clips,
 so you can fix any cut by hand afterwards (or reset the whole thing).
 
@@ -20,7 +21,7 @@ so you can fix any cut by hand afterwards (or reset the whole thing).
 ./install.sh
 ```
 
-Then restart Premiere and open **Window → Extensions → PodCut — Auto Podcast Editor**.
+Then restart Premiere and open **Window → Extensions → PodAuto — Auto Podcast Editor**.
 
 (The script symlinks the extension into `~/Library/Application Support/Adobe/CEP/extensions`
 and enables `PlayerDebugMode` so Premiere loads unsigned personal extensions.
@@ -85,5 +86,5 @@ just reopen the panel.)
 - **Too many cuts** — raise Min shot length and/or Voice sensitivity.
 - **Missed quiet speakers** — lower Voice sensitivity (try 8).
 - **Wrong angle shows after Apply** — remember stacked tracks: the *topmost
-  enabled* clip wins. Make sure every camera is mapped so PodCut manages all of
+  enabled* clip wins. Make sure every camera is mapped so PodAuto manages all of
   them; unmapped video tracks above your cameras will cover everything.

@@ -1,11 +1,11 @@
 #!/bin/zsh
-# PodCut installer — symlinks the extension into Premiere's CEP folder and
+# PodAuto installer — symlinks the extension into Premiere's CEP folder and
 # enables unsigned-extension loading (PlayerDebugMode).
 set -e
 
-SRC="$(cd "$(dirname "$0")/com.adamk.podcut" && pwd)"
+SRC="$(cd "$(dirname "$0")/com.podauto" && pwd)"
 DEST_DIR="$HOME/Library/Application Support/Adobe/CEP/extensions"
-DEST="$DEST_DIR/com.adamk.podcut"
+DEST="$DEST_DIR/com.podauto"
 
 mkdir -p "$DEST_DIR"
 rm -rf "$DEST"
@@ -20,9 +20,9 @@ echo "PlayerDebugMode enabled for CSXS 10/11/12."
 
 if ! command -v ffmpeg >/dev/null 2>&1 && [ ! -x /opt/homebrew/bin/ffmpeg ] && [ ! -x /usr/local/bin/ffmpeg ]; then
   echo ""
-  echo "⚠️  ffmpeg not found — PodCut needs it for audio analysis. Install with:"
+  echo "⚠️  ffmpeg not found — PodAuto needs it for audio analysis. Install with:"
   echo "    brew install ffmpeg"
 fi
 
 echo ""
-echo "Done. Restart Premiere Pro, then open:  Window → Extensions → PodCut — Auto Podcast Editor"
+echo "Done. Restart Premiere Pro, then open:  Window → Extensions → PodAuto — Auto Podcast Editor"
