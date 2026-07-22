@@ -1,3 +1,6 @@
+<img width="2382" height="1449" alt="Screenshot 2026-07-22 at 10 20 04 AM" src="https://github.com/user-attachments/assets/db94afc9-dbf1-423b-b62f-1397aadadd85" />
+
+
 # PodAuto — automatic multicam podcast editing for Premiere Pro
 
 A Premiere Pro panel that listens to each speaker's mic, figures out who is
