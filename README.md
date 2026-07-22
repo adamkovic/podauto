@@ -1,6 +1,6 @@
 # PodCut — automatic multicam podcast editing for Premiere Pro
 
-A personal Premiere Pro panel that does what tools like Wraith do: it listens to
+A personal Premiere Pro panel that does what tools like Wraith/Autopod do: it listens to
 each speaker's mic, figures out who is talking, and automatically cuts between
 camera angles — giving you a close-to-final edit in minutes instead of hours of
 multicam work. Supports up to 8 speakers/cameras.
